@@ -1,0 +1,7 @@
+{
+    "TestCommand" : {
+        "usage" : "TestCommand [dir] [val] [-n]",
+        "descr" : "It's a Test Command for Test Purpose.",
+        "perms" : "None"
+    }
+}
