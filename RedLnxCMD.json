@@ -1,7 +1,67 @@
 {
-    "TestCommand" : {
-        "usage" : "TestCommand [dir] [val] [-n]",
-        "descr" : "It's a Test Command for Test Purpose.",
-        "perms" : "None"
+    "help" : {
+        "usage" : "help [cmd]",
+        "descr" : "gives you information about commands",
+        "infos" : "[cmd] - command (name)"
+    },
+    "exit" : {
+        "usage" : "exit",
+        "descr" : "terminates RedLnx",
+        "infos" : "none"
+    },
+    "clear" : {
+        "usage" : "clear",
+        "descr" : "clears the console",
+        "infos" : "none"
+    },
+    "ls" : {
+        "usage" : "ls",
+        "descr" : "displays what's in the current directory",
+        "infos" : "none"
+    },
+    "cd" : {
+        "usage" : "cd [dir]",
+        "descr" : "enters the specified directory",
+        "infos" : "[dir] - directory"
+    },
+    "python" : {
+        "usage" : "python",
+        "descr" : "starts the python console",
+        "infos" : "none"
+    },
+    "echo" : {
+        "usage" : "echo [arg]",
+        "descr" : "prints something in the RedLnx console",
+        "infos" : "[arg] - argument (words/sentences)"
+    },
+    "mkdir" : {
+        "usage" : "mkdir [dir] [ext]",
+        "descr" : "creats an directory",
+        "infos" : "[dir] - directory, [ext] - extra (optional)"
+    },
+    "rmdir" : {
+        "usage" : "rmdir [dir] [ext]",
+        "descr" : "removes an directory",
+        "infos" : "[dir] - directory, [ext] - extra (optional)"
+    },
+    "mk" : {
+        "usage" : "mk [file] [ext]",
+        "descr" : "creates a file",
+        "infos" : "[file] - filename, [ext] - extra (optional)"
+    },
+    "rm" : {
+        "usage" : "rm [file] [ext]",
+        "descr" : "removes a file",
+        "infos" : "[file] - filename, [ext] - extra (optional)"
+    },
+    "user" : {
+        "usage" : "user [cmd] [name] [psswd]",
+        "descr" : "manages RedLnx users (accounts)",
+        "infos" : "[cmd] - command (create,remove,edit,list), [name] - username, [psswd] - password"
+    },
+    "cat" : {
+        "usage" : "cat [file]",
+        "descr" : "prints the content of the file",
+        "infos" : "[file] - filename"
     }
 }
