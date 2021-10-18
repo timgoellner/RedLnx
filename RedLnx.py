@@ -1,3 +1,4 @@
+# RedLnx Version 0.5 -> BETA by SirRoti(#2788)
 try:
     import os
     import time
@@ -22,6 +23,29 @@ try:
             """)
             input()
 
+    def PermissionCheck():
+        file = "RedLnx.ini"
+        config = ConfigParser()
+        config.read(file)
+        devmode = config["DEVMODE"]["~"]
+        if devmode == "True":
+            print(f"-devmode: permission check: {str(usr)}")
+        try:
+            _ = config["USER"]["*" + str(usr)]
+            return
+        except:
+            users = config.options("USER")
+            admin_password = ""
+            for user in users:
+                if user.startswith("*"):
+                    admin_password = config["USER"][user]
+                    break
+            if input("sudo password: ") == str(admin_password):
+                return
+            else:
+                print("user: incorrect password")
+                main()
+
     def help(comd):
         try:
             file = "RedLnx.ini"
@@ -33,25 +57,30 @@ try:
             try:
                 RedLnxCMDFILE = open("RedLNXCMD.json", "r")
                 RedLnxCMD = json.load(RedLnxCMDFILE)
-                print(RedLnxCMD[str(comd)]["usage"])
-                print(RedLnxCMD[str(comd)]["descr"])
-                print(RedLnxCMD[str(comd)]["perms"])
+                print(f"""RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
+GNU bash, version 0.5(1)-release
+
+Usage: {RedLnxCMD[str(comd)]["usage"]}
+Description: {RedLnxCMD[str(comd)]["descr"]}
+Informations: {RedLnxCMD[str(comd)]["infos"]}""")
             except:
                 print("""RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
 GNU bash, version 0.5(1)-release
 These shell commands are defined internally.
 
-exit [n]
-clear [n]
-ls [-N] [dir]
-cd [-N] [dir]
-python [-N]
-echo [-N] [arg...]
-mkdir [dir] [ext] [n]
-rmdir [dir] [ext] [n]
-mk [dat] [ext] [n]
-rm [dat] [ext] [n]
-user [cmd] [name] [psswd] [n]""")
+help [cmd]
+exit
+clear
+ls
+cd [dir]
+python
+echo [arg]
+mkdir [dir] [ext]
+rmdir [dir] [ext]
+mk [file] [ext]
+rm [file] [ext]
+user [cmd] [name] [psswd]
+cat [file]""")
             main()
         except:
             ErrorHandeling("help")
@@ -270,9 +299,7 @@ user [cmd] [name] [psswd] [n]""")
             ErrorHandeling("rm")
 
     def nano(dok):
-        # editor(box=False, inittext="RedLnx 0.4", win_location=(5, 5))
-        # input()
-        # Danke an Scott Hansen für den Text  Editor
+        # Command is not finished
         try:
             file = "RedLnx.ini"
             config = ConfigParser()
@@ -299,6 +326,48 @@ user [cmd] [name] [psswd] [n]""")
         except:
             ErrorHandeling("nano")
 
+    def cat(file_name):
+        try:
+            file = "RedLnx.ini"
+            config = ConfigParser()
+            config.read(file)
+            devmode = config["DEVMODE"]["~"]
+            if devmode == "True":
+                print("-devmode: cat: " + str(file_name))
+            loc = config["LOCATION"]["~"]
+            if loc == "":
+                loc = "/"
+            dot = file_name.count(".")
+            if dot == 0:
+                print("cat: the File must have an ending")
+                main()
+            ending = file_name.split(".")[1]
+            endings = ["txt","py"]
+            if ending in endings:
+                pass
+            else:
+                supported = ""
+                for ending_ in endings:
+                    supported = (supported + " " + ending_)
+                print("cat: this ending is not supported, use:" + supported)
+                main()
+            loc = loc.replace("/","-")
+            try:
+                cat_file = open("Dokuments/" + loc + "~" + file_name, "r")
+            except:
+                print(f"cat: file does not exists: {file_name}")
+                main()
+            file_lines = cat_file.readlines()
+            out_lines = []
+            for line in file_lines:
+                out_lines.append(line.replace("\n", ""))
+            for line in out_lines:
+                print(line)
+            cat_file.close()
+            main()
+        except:
+            ErrorHandeling("cat")
+
     def user(comd,user_,pswd):
         try:
             file = "RedLnx.ini"
@@ -307,9 +376,7 @@ user [cmd] [name] [psswd] [n]""")
             devmode = config["DEVMODE"]["~"]
             if devmode == "True":
                 print("-devmode: user: " + str(comd) + ": " + str(user_) + ": " + str(pswd))
-            if admin == "False":
-                print("user: you don't have permission to use this command")
-                main()
+            PermissionCheck()
             if user_.startswith("*"):
                 print("user: forbidden letter in user name: *")
                 main()
@@ -334,6 +401,9 @@ user [cmd] [name] [psswd] [n]""")
                     except:
                         print(f"user: user not exists: {str(user_)}")
                         main()
+                if str(user_) == str(usr):
+                    print("user: cannot remove current used user")
+                    main()
                 config.remove_option("USER", str(user_))
                 with open(file, "w") as configfile:
                     config.write(configfile)
@@ -577,8 +647,6 @@ user [cmd] [name] [psswd] [n]""")
                     pswd = ""
                 user(comd,user_,pswd)
 
-                
-
             # elif cmd.startswith("nano"):
             #     try:
             #         dok = cmd.split(" ")[1]
@@ -586,6 +654,14 @@ user [cmd] [name] [psswd] [n]""")
             #         print("nano: missing operand")
             #         main()
             #     nano(dok)
+
+            elif cmd.startswith("cat"):
+                try:
+                    file_name = cmd.split(" ")[1]
+                except:
+                    print("cat: missing operand")
+                    main()
+                cat(file_name)
 
             elif cmd.startswith("cd"):
                 try:
