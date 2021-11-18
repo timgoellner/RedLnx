@@ -1,9 +1,10 @@
-# RedLnx Version 0.5 -> BETA by SirRoti(#2788)
+# RedLnx Version 0.6 -> BETA by SirRoti(#2788)
 try:
     import os
     import time
     import sys
     import json
+    import socket
     from configparser import ConfigParser
     from colorama import Fore, Style, Back
 
@@ -57,32 +58,33 @@ try:
             try:
                 RedLnxCMDFILE = open("RedLNXCMD.json", "r")
                 RedLnxCMD = json.load(RedLnxCMDFILE)
-                print(f"""RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
-GNU bash, version 0.5(1)-release
+                print(f"""RedLnx 0.6 (BETA) orianted at (GNU/Linux => x86_64)
 
 Usage: {RedLnxCMD[str(comd)]["usage"]}
 Description: {RedLnxCMD[str(comd)]["descr"]}
 Informations: {RedLnxCMD[str(comd)]["infos"]}""")
             except:
-                print("""RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
-GNU bash, version 0.5(1)-release
+                print("""RedLnx 0.6 (BETA) orianted at (GNU/Linux => x86_64)
 These shell commands are defined internally.
 
-help [cmd]
+help (cmd)
 exit
 clear
 ls
 cd [dir]
 python
 echo [arg]
-mkdir [dir] [ext]
-rmdir [dir] [ext]
-mk [file] [ext]
-rm [file] [ext]
-user [cmd] [name] [psswd]
-cat [file]""")
+mkdir [dir] (ext)
+rmdir [dir] (ext)
+mk [file] (ext)
+rm [file] (ext)
+user [cmd] (name) (psswd)
+cat [file]
+pwd
+grep [word] [file] (ext)
+history (line)""")
             main()
-        except:
+        except Exception:
             ErrorHandeling("help")
 
     def echo(str_):
@@ -104,7 +106,7 @@ cat [file]""")
                 echo_ =(echo + spacing + strA)
             print(echo_)
             main()
-        except:
+        except Exception:
             ErrorHandeling("echo")
 
     def mkdir(dir, extra):
@@ -125,6 +127,10 @@ cat [file]""")
             loc = config["LOCATION"]["~"]
             if loc == "":
                 loc = "/"
+            dot = dir.count(".")
+            if dot != 0:
+                print("mkdir: forbidden letter in directory name: .")
+                main()
             names = config.options(loc)
             count = str(names).count("~")
             if count >= 1023:
@@ -146,7 +152,7 @@ cat [file]""")
             with open(file, "w") as configfile:
                 config.write(configfile)
             main()
-        except:
+        except Exception:
             ErrorHandeling("mkdir")
 
     def rmdir(dir, extra):
@@ -179,16 +185,23 @@ cat [file]""")
                     config.write(configfile)
                 main()
             if name_ == "":
-                print("rmdir: cannot remove '" + loc + dir + "': No such file or directory")
+                print("rmdir: cannot remove '" + loc + dir + "': no such file or directory")
                 main()
-            config.remove_option(loc, name_)
-            with open(file, "w") as configfile:
-                config.write(configfile)
+            if loc == "/":
+                loc = ""
+            if len(config.options(loc + "/" + dir)) >= 1:
+                print("rmdir: cannot remove " + loc + dir + ": directorty is not empty")
+                main()
             config.remove_section(loc + "/" + dir)
             with open(file, "w") as configfile:
                 config.write(configfile)
+            if loc == "":
+                loc = "/"
+            config.remove_option(loc, name_)
+            with open(file, "w") as configfile:
+                config.write(configfile)
             main()  
-        except:
+        except Exception:
             ErrorHandeling("rmdir")
 
     def mk(dat, extra):
@@ -249,7 +262,7 @@ cat [file]""")
             dok = open("Dokuments/" + loc + "~" + dat, "w+")
             dok.close()
             main()
-        except:
+        except Exception:
             ErrorHandeling("mk")
 
     def rm(dat, extra):
@@ -295,7 +308,7 @@ cat [file]""")
                     loc = ""
                 print("rm: cannot remove " + loc + "/" + dat + ": noch such file")
             main()
-        except:
+        except Exception:
             ErrorHandeling("rm")
 
     def nano(dok):
@@ -309,21 +322,21 @@ cat [file]""")
                 main()
             devmode = config["DEVMODE"]["~"]
             if devmode == "true":
-                print("-devmode: rm: " + str(dok))
+                print("-devmode: nano: " + str(dok))
             loc = config["LOCATION"]["~"]
             if loc == "":
                 loc = "/"
             loc = loc.replace("/","-")
             try:
-                dok = ("Dokuments/" + loc + "~" + dok)
-                dok_ = open(dok,"r+")
+                dok_name = ("Dokuments/" + loc + "~" + dok)
+                file_ = open(dok,"r+")
                 in_ = dok_.read()
                 print(in_)
             except:
-                print("nano: " + dok + ": no such file")
+                print(f"nano: file does not exists: {dok}")
                 main()
             main()
-        except:
+        except Exception:
             ErrorHandeling("nano")
 
     def cat(file_name):
@@ -339,7 +352,7 @@ cat [file]""")
                 loc = "/"
             dot = file_name.count(".")
             if dot == 0:
-                print("cat: the File must have an ending")
+                print("cat: the file must have an ending")
                 main()
             ending = file_name.split(".")[1]
             endings = ["txt","py"]
@@ -365,11 +378,63 @@ cat [file]""")
                 print(line)
             cat_file.close()
             main()
-        except:
+        except Exception:
             ErrorHandeling("cat")
 
-    def user(comd,user_,pswd):
+    def grep(word,file_name,ext):
         try:
+            file = "RedLnx.ini"
+            config = ConfigParser()
+            config.read(file)
+            devmode = config["DEVMODE"]["~"]
+            if devmode == "True":
+                print("-devmode: grep: " + str(word) + ": " + str(file_name))
+            loc = config["LOCATION"]["~"]
+            if loc == "":
+                loc = "/"
+            dot = file_name.count(".")
+            if dot == 0:
+                print("grep: the file must have an ending")
+                main()
+            ending = file_name.split(".")[1]
+            endings = ["txt","py"]
+            if ending in endings:
+                pass
+            else:
+                supported = ""
+                for ending_ in endings:
+                    supported = (supported + " " + ending_)
+                print("grep: this ending is not supported, use:" + supported)
+                main()
+            loc = loc.replace("/","-")
+            try:
+                grep_file = open("Dokuments/" + loc + "~" + file_name, "r")
+            except:
+                print(f"grep: file does not exists: {file_name}")
+                main()
+            file_lines = grep_file.readlines()
+            for file_line in file_lines:
+                line = "".join(file_line.split("\n"))
+                line_out = ""
+                line_words = line.split(" ")
+                for line_word in line_words:
+                    if ext != "-contains":
+                        if word.lower() == line_word.lower():
+                            line_out += (f"{Fore.RED}{line_word}{Fore.RESET} ")
+                        else:
+                            line_out += line_word + " "
+                    else:
+                        if word.lower() in line_word.lower():
+                            line_out += (f"{Fore.RED}{line_word}{Fore.RESET} ")
+                        else:
+                            line_out += line_word + " "
+                print(line_out)
+            main()
+        except Exception:
+            ErrorHandeling("grep")
+
+    def user(comd,user_,pswd):
+        try: 
             file = "RedLnx.ini"
             config = ConfigParser()
             config.read(file)
@@ -432,7 +497,7 @@ cat [file]""")
             else:
                 print(f"user: no such instruction: {str(comd)}")
             main()
-        except:
+        except Exception:
             ErrorHandeling("user")
 
     def ls():
@@ -455,7 +520,7 @@ cat [file]""")
                 in_ = (in_ + "  " + value)
             print(in_)
             main()
-        except:
+        except Exception:
             ErrorHandeling("ls")
 
     def cd(dir):
@@ -477,6 +542,24 @@ cat [file]""")
                     print(new_path + ": no such directory")
                     main()
                 config.set("LOCATION", "~", new_path)
+                with open(file, "w") as configfile:
+                    config.write(configfile)
+                main()
+            if dir == "..":
+                forbidden_locs = ["", "/"]
+                if loc in forbidden_locs:
+                    print("cd: you are in the main directory")
+                    main()
+                path_list = loc.split("/")
+                path_list.remove("")
+                item_count = 0
+                for _ in path_list:
+                    item_count += 1
+                path_list.pop(item_count - 1)
+                new_loc = ""
+                for dir_ in path_list:
+                    new_loc = new_loc + "/" + dir_
+                config.set("LOCATION", "~", new_loc)
                 with open(file, "w") as configfile:
                     config.write(configfile)
                 main()
@@ -510,7 +593,7 @@ cat [file]""")
                     loc = ""
                 print(loc + "/" + dir + ": no such directory")
                 main()
-        except:
+        except Exception:
             ErrorHandeling("cd")
 
 
@@ -541,6 +624,15 @@ cat [file]""")
             result = ""
         print(result)
         main()
+
+
+    def add_history(cmd):
+        lenght = len(history)
+        if lenght == 0:
+            history.append(f"1  {cmd}")
+        else:
+            cmd_count = history[int(lenght)-1].split(" ")[0]
+            history.append(f"{int(cmd_count)+1}  {cmd}")
         
 
     def main():
@@ -554,6 +646,8 @@ cat [file]""")
                 print("-devmode: cmd")
             loc = config["LOCATION"]["~"]
             cmd = input(f"{Fore.GREEN}{usr}@RedLnx{Fore.WHITE}:{Fore.BLUE}~" + loc + f"# {Fore.WHITE}")
+
+            add_history(cmd)
 
             if cmd.startswith("exit"):
                 exit = True
@@ -674,6 +768,39 @@ cat [file]""")
                     main()
                 cd(dir)
 
+            elif cmd.startswith("pwd"):
+                pwd_loc = loc
+                if pwd_loc == "":
+                    pwd_loc = "/"
+                print(pwd_loc)
+                main()
+
+            elif cmd.startswith("grep"):
+                grep_cuts = cmd.split(" ")
+                try:
+                    word = grep_cuts[1]
+                    file_name = grep_cuts[2]
+                except:
+                    print("grep: missing operand")
+                    main()
+                try:
+                    ext = grep_cuts[3]
+                except:
+                    ext = "None"
+                grep(word,file_name,ext)
+
+            elif cmd.startswith("history"):
+                try:
+                    line = cmd.split(" ")[1]
+                    for history_command in history:
+                        if history_command.startswith(line):
+                            history_command_result = history_command.split("  ")[1]
+                            print(history_command_result)
+                except:
+                    for history_command in history:
+                        print(history_command)
+                main()
+
             elif cmd.startswith("help"):
                 try:
                     comd = cmd.split(" ")[1]
@@ -688,7 +815,7 @@ cat [file]""")
                 get_math(cmd)
                 print(cmd + ": command not found")
                 main()
-        except:
+        except Exception:
             if exit == True:
                 sys.exit()
             ErrorHandeling("cmd-input")
@@ -717,9 +844,11 @@ cat [file]""")
                         can_passin = False
             if devmode == "True":
                 print("-devmode: passin: " + usr + ": " + str(can_passin))
-            if input(f"{Style.BRIGHT}[{Fore.GREEN}+{Fore.WHITE}]{Style.NORMAL} " + usr + "@45.146.252.250's password: ") == str(password) and can_passin == True:
+            global ip_address
+            ip_address = socket.gethostbyname(socket.gethostname())
+            if input(f"{Style.BRIGHT}[{Fore.GREEN}+{Fore.WHITE}]{Style.NORMAL} " + usr + "@" + ip_address + "'s password: ") == str(password) and can_passin == True:
                 time.sleep(1)
-                print("""Welcome to RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
+                print("""Welcome to RedLnx 0.6 (BETA) orianted at (GNU/Linux => x86_64)
 
       ___           ___          _____                          ___           ___
      /  /\         /  /\        /  /::\     ___                /__/\         /__/|
@@ -744,7 +873,7 @@ cat [file]""")
                 time.sleep(1)
                 print(f"{Style.BRIGHT}[{Fore.RED}-{Fore.WHITE}]{Style.NORMAL} Access denied")
                 passin(usr)
-        except:
+        except Exception:
             ErrorHandeling("passin")
 
     
@@ -753,8 +882,8 @@ cat [file]""")
             file = "RedLnx.ini"
             config = ConfigParser()
             config.read(file)
-            print("""Welcome to RedLnx 0.5 (BETA) LTS (GNU/Linux 5.4.78-2-pve x86_64)
-The RedLnx 0.5 (BETA) Setup is Starting. Have fun using RedLnx
+            print("""Welcome to RedLnx 0.6 (BETA) orianted at (GNU/Linux => x86_64)
+The RedLnx 0.6 (BETA) Setup is Starting. Have fun using RedLnx
 
       ___           ___          _____                          ___           ___
      /  /\         /  /\        /  /::\     ___                /__/\         /__/|
@@ -780,7 +909,7 @@ The RedLnx 0.5 (BETA) Setup is Starting. Have fun using RedLnx
                 config.write(configfile)
             exit = False
             main()
-        except:
+        except Exception:
             ErrorHandeling("setup")
 
 
@@ -797,7 +926,7 @@ The RedLnx 0.5 (BETA) Setup is Starting. Have fun using RedLnx
             usr = input(f"{Style.BRIGHT}[{Fore.GREEN}+{Fore.WHITE}]{Style.NORMAL} login as: ")
             exit = False
             passin(usr)
-        except:
+        except Exception:
             ErrorHandeling("login")
 
 
@@ -807,6 +936,9 @@ The RedLnx 0.5 (BETA) Setup is Starting. Have fun using RedLnx
         file = "RedLnx.ini"
         config = ConfigParser()
         config.read(file)
+
+        global history
+        history = []
 
         setup_cnt = config["SETUP"]["~"]
         if setup_cnt == "False":
