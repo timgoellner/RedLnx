@@ -1,8 +1,8 @@
 {
     "help" : {
-        "usage" : "help [cmd]",
+        "usage" : "help (cmd)",
         "descr" : "gives you information about commands",
-        "infos" : "[cmd] - command (name)"
+        "infos" : "(cmd) - command (name)"
     },
     "exit" : {
         "usage" : "exit",
@@ -35,33 +35,48 @@
         "infos" : "[arg] - argument (words/sentences)"
     },
     "mkdir" : {
-        "usage" : "mkdir [dir] [ext]",
+        "usage" : "mkdir [dir] (ext)",
         "descr" : "creats an directory",
-        "infos" : "[dir] - directory, [ext] - extra (optional)"
+        "infos" : "[dir] - directory, (ext) - extra (optional >> --no-root-warn)"
     },
     "rmdir" : {
-        "usage" : "rmdir [dir] [ext]",
+        "usage" : "rmdir [dir] (ext)",
         "descr" : "removes an directory",
-        "infos" : "[dir] - directory, [ext] - extra (optional)"
+        "infos" : "[dir] - directory, (ext) - extra (optional >> --no-root-warn)"
     },
     "mk" : {
-        "usage" : "mk [file] [ext]",
+        "usage" : "mk [file] (ext)",
         "descr" : "creates a file",
-        "infos" : "[file] - filename, [ext] - extra (optional)"
+        "infos" : "[file] - filename, (ext) - extra (optional >> --no-root-warn)"
     },
     "rm" : {
-        "usage" : "rm [file] [ext]",
+        "usage" : "rm [file] (ext)",
         "descr" : "removes a file",
-        "infos" : "[file] - filename, [ext] - extra (optional)"
+        "infos" : "[file] - filename, (ext) - extra (optional >> --no-root-warn)"
     },
     "user" : {
-        "usage" : "user [cmd] [name] [psswd]",
+        "usage" : "user [cmd] (name) (psswd)",
         "descr" : "manages RedLnx users (accounts)",
-        "infos" : "[cmd] - command (create,remove,edit,list), [name] - username, [psswd] - password"
+        "infos" : "[cmd] - command (create,remove,edit,list), (name) - username, (psswd) - password"
     },
     "cat" : {
         "usage" : "cat [file]",
         "descr" : "prints the content of the file",
         "infos" : "[file] - filename"
+    },
+    "pwd" : {
+        "usage" : "pwd",
+        "descr" : "prints the current working directory",
+        "infos" : "none"
+    },
+    "grep" : {
+        "usage" : "grep [word] [file] (ext)",
+        "descr" : "highlights the given word in the given file",
+        "infos" : "[word] - word to search for, [file] - file to search in, (ext) - extra (optional >> -contains)"
+    },
+    "history" : {
+        "usage" : "history (line)",
+        "descr" : "shows the latest commands",
+        "infos" : "(line) - zeige den command an der angegebenen stelle"
     }
 }
