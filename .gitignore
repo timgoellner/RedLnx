@@ -1,2 +1,7 @@
+file_system
+
+data/file_system.json
+data/system_data.json
+
 modules/__pycache__
 modules/commands/__pycache__
