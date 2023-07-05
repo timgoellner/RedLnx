@@ -1,0 +1,72 @@
+{
+  "clear": {
+    "usage": "clear",
+    "options": [],
+    "max_args": 0
+  },
+  "ls": {
+    "usage": "ls [-la] [directory]",
+    "options": ["-la"],
+    "max_args": 1
+  },
+  "cd": {
+    "usage": "cd [directory]",
+    "options": [],
+    "max_args": 1
+  },
+  "echo": {
+    "usage": "echo [-n] [string ...]",
+    "options": ["-n"],
+    "max_args": -1
+  },
+  "help": {
+    "usage": "help [pattern]",
+    "options": [],
+    "max_args": 1
+  },
+  "exit": {
+    "usage": "exit",
+    "options": [],
+    "max_args": 0
+  },
+  "mkdir": {
+    "usage": "mkdir [-p] [directories ...]",
+    "options": ["-p"],
+    "max_args": -1
+  },
+  "rmdir": {
+    "usage": "rmdir [-rf] [directories ...]",
+    "options": ["-rf"],
+    "max_args": -1
+  },
+  "touch": {
+    "usage": "touch [files ...]",
+    "options": [],
+    "max_args": -1
+  },
+  "rm": {
+    "usage": "rm [files ...]",
+    "options": [],
+    "max_args": -1
+  },
+  "useradd": {
+    "usage": "useradd [-m] [user]",
+    "options": ["-m"],
+    "max_args": 1
+  },
+  "userdel": {
+    "usage": "userdel [-r] [user]",
+    "options": ["-r"],
+    "max_args": 1
+  },
+  "passwd": {
+    "usage": "passwd [user]",
+    "options": [],
+    "max_args": 1
+  },
+  "pwd": {
+    "usage": "pwd",
+    "options": [],
+    "max_args": 0
+  }
+}
