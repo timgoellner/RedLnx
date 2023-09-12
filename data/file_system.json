@@ -1,3 +1,17 @@
 {
-    "/": {}
+    "/": {
+        "home": {
+            "type": 1,
+            "author": "tim",
+            "creation_date": "Jul 28 2023"
+        }
+    },
+    "/home/": {
+        "tim": {
+            "type": 1,
+            "author": "tim",
+            "creation_date": "Jul 29 2023"
+        }
+    },
+    "/home/tim/": {}
 }

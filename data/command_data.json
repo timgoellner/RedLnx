@@ -68,5 +68,10 @@
     "usage": "pwd",
     "options": [],
     "max_args": 0
+  },
+  "su": {
+    "usage": "su [-p] [user]",
+    "options": ["-p"],
+    "max_args": 1
   }
 }
