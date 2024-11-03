@@ -1,7 +1,9 @@
-import msvcrt, time, sys
+import msvcrt, time, ctypes
+from ctypes import c_long, c_ulong
 from colorama import Fore as color
 
 COLORCODES = {"&2": color.GREEN, "&f": color.WHITE, "&4": color.RED, "&e": color.YELLOW, "&9": color.LIGHTBLUE_EX, "&a": color.LIGHTGREEN_EX}
+GHANDLE = ctypes.windll.kernel32.GetStdHandle(c_long(-11))
 
 def out(out_text: list[str], input_mode: bool = False, end_newline: bool = True, colors: bool = False) -> str:
     for out_line_idx, out_line in enumerate(out_text):
@@ -21,4 +23,7 @@ def sleep(duration: float):
     end = now + duration
     while now < end: now = time.perf_counter()
 
-    return
+
+def position(x: int, y: int):
+    position = x + (y << 16)
+    ctypes.windll.kernel32.SetConsoleCursorPosition(GHANDLE, c_ulong(position))
