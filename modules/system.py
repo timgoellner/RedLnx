@@ -2,7 +2,7 @@ import msvcrt, time, ctypes
 from ctypes import c_long, c_ulong
 from colorama import Fore as color
 
-COLORCODES = {"&2": color.GREEN, "&f": color.WHITE, "&4": color.RED, "&e": color.YELLOW, "&9": color.LIGHTBLUE_EX, "&a": color.LIGHTGREEN_EX}
+COLORCODES = {"&2": color.GREEN, "&f": color.WHITE, "&4": color.RED, "&e": color.YELLOW, "&1": color.BLUE, "&9": color.LIGHTBLUE_EX, "&a": color.LIGHTGREEN_EX}
 GHANDLE = ctypes.windll.kernel32.GetStdHandle(c_long(-11))
 
 def out(out_text: list[str], input_mode: bool = False, end_newline: bool = True, colors: bool = False) -> str:

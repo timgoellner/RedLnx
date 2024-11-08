@@ -1,4 +1,4 @@
-import os
+import os, sys
 import modules.system as system, modules.data_handling as data_handling, modules.file_manager as file_manager, modules.perm_manager as perm_manager
 
 
@@ -26,13 +26,33 @@ def run(args: list[str], sudo: bool):
     system.out([f"vi: cannot access '{file_path}': No such directory"])
     return
   elif file_name not in file_system[file_path]:
-    system.out([f"vi: cannot read '{file_path}': No such file"])
+    system.out([f"vi: cannot read '{file_path + file_name}': No such file"])
     return
 
   if not sudo and not perm_manager.validate_directory_access(file_path):
-    system.out([f"vi: cannot read '{file_path}': Permission denied"])
+    system.out([f"vi: cannot read '{file_path + file_name}': Permission denied"])
     return
 
   if not perm_manager.validate_directory_access(file_path) and not perm_manager.validate_session(): return
 
-  #os.system('cls')
+  data = file_manager.read_file(file_path, file_name)
+  terminal_lines = os.get_terminal_size().lines
+
+  unused_lines = terminal_lines - len(data) - 2
+  if unused_lines < 0:
+    system.out(["vi: file is too long for console size"])
+    return
+
+  os.system('cls')
+
+  system.out(data)
+  system.out(['&1~\n&f' * unused_lines], colors=True, end_newline=False)
+
+  characters = sum(len(line) for line in data)
+  system.out([f"\"{file_name}\" {len(data)} line, {characters} characters"])
+
+  system.position(0, 0)
+
+  while True:
+    pass
+
