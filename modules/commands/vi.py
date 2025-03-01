@@ -88,7 +88,8 @@ def run(args: list[str], sudo: bool):
         for move_index in range(0, TERMINAL_LINES - unused_lines - 3 - position[1]):
           line = TERMINAL_LINES - unused_lines - move_index - 2
           system.position([position[0], line])
-          if len(data) > line + 1: system.out([data[line] + (' ' * (max(0, len(data[line + 1]) - len(data[line]))))], instant=True)
+          if len(data) > line + 1: system.out([data[line] + (' ' * max(0, len(data[line + 1]) - len(data[line])))], instant=True)
+          elif len(data[line]) == 0: system.out([' '], instant=True)
           else: system.out([data[line]], instant=True)
 
         unused_lines -= 1
@@ -103,22 +104,38 @@ def run(args: list[str], sudo: bool):
         system.position(position)
 
       elif key == 'backspace':
+        line_chars = data[position[1]][position[0]:]
+
         if position[0] == 0:
           if position[1] == 0: continue
+          elif len(line_chars) + len(data[position[1]-1]) > (TERMINAL_COLUMNS - 1):
+            set_status('error: x boundary reached', position)
+            continue
 
+          data.pop(position[1])
+          for move_index in range(0, TERMINAL_LINES - unused_lines - 3 - position[1]):
+            line = position[1] + move_index
+            if move_index != 0: system.out([data[line] + (' ' * max(0, len(data[line - 1]) - len(data[line])))])
+            else: system.out([data[line] + (' ' * max(0, len(line_chars) - len(data[line])))])
+
+          if position[1] != len(data): system.out(['&1~&f' + (' ' * max(0, len(data[-1])-1))], colors=True, end_newline=False, instant=True)
+          else: system.out(['&1~&f' + (' ' * max(0, len(line_chars)-1))], colors=True, end_newline=False, instant=True)
           unused_lines += 1
-          system.out(['&1~\n&f'], colors=True, end_newline=False, instant=True)
-          data.pop()
 
           position[1] -= 1
           position[0] = len(data[position[1]])
+          system.position(position)
+          
+          data[position[1]] += line_chars
+          system.out([line_chars], instant=True, end_newline=False)
+
           system.position(position)
           continue
 
         position[0] -= 1
         system.position(position)
-        system.out([' '], instant=True)
-        data[position[1]] = data[position[1]][:-1]
+        system.out([line_chars + ' '], instant=True)
+        data[position[1]] = data[position[1]][:position[0]] + line_chars
         system.position(position)
 
 
