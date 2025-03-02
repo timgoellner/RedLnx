@@ -36,6 +36,7 @@ def get() -> str:
         key = b''
     elif key == b'\r': return 'enter'
     elif key == b'\x08': return 'backspace'
+    elif key == b'\x1b': return 'esc'
 
     return key.decode('utf-8', 'ignore')
 

@@ -180,6 +180,10 @@ def run(args: list[str], sudo: bool):
           position[0] += 1
           system.position(position)
 
+      elif key == 'esc':
+        set_status('', position)
+        command_mode = True
+
 
     elif key == ':':
       pass
