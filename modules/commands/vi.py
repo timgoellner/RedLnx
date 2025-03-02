@@ -64,13 +64,15 @@ def run(args: list[str], sudo: bool):
 
     if not command_mode:
       if len(key) == 1:
-        if position[0] >= (TERMINAL_COLUMNS - 1):
+        if len(data[position[1]]) + 1 > (TERMINAL_COLUMNS - 1):
           set_status('error: x boundary reached', position)
           continue
 
-        system.out([key], end_newline=False, instant=True)
-        data[position[1]] += key
+        line_chars = data[position[1]][position[0]:]
+        system.out([key + line_chars], end_newline=False, instant=True)
+        data[position[1]] = data[position[1]][:position[0]] + key + line_chars
         position[0] += 1
+        system.position(position)
 
 
       elif key == 'enter':
@@ -115,8 +117,8 @@ def run(args: list[str], sudo: bool):
           data.pop(position[1])
           for move_index in range(0, TERMINAL_LINES - unused_lines - 3 - position[1]):
             line = position[1] + move_index
-            if move_index != 0: system.out([data[line] + (' ' * max(0, len(data[line - 1]) - len(data[line])))])
-            else: system.out([data[line] + (' ' * max(0, len(line_chars) - len(data[line])))])
+            if move_index != 0: system.out([data[line] + (' ' * max(0, len(data[line - 1]) - len(data[line])))], instant=True)
+            else: system.out([data[line] + (' ' * max(0, len(line_chars) - len(data[line])))], instant=True)
 
           if position[1] != len(data): system.out(['&1~&f' + (' ' * max(0, len(data[-1])-1))], colors=True, end_newline=False, instant=True)
           else: system.out(['&1~&f' + (' ' * max(0, len(line_chars)-1))], colors=True, end_newline=False, instant=True)
