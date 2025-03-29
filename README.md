@@ -21,3 +21,6 @@ RedLnx is a Python Programm that imitates the Linux shell
 - userdel [-r] [user]
 - passwd [user]
 - pwd
+- su [-p] [user]
+- vi [file]
+- cat [file]
