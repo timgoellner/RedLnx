@@ -192,7 +192,7 @@ def run(args: list[str], sudo: bool):
         mode = 'command'
         command = ''
 
-      elif key == 'a':
+      elif key == 'a' or key == 'i':
         set_status(' -- insert -- ', position)
         mode = 'insert'
 
