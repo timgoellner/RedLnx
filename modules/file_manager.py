@@ -44,12 +44,14 @@ def remove_file(directory_name: str, file_name: str):
 
 
 def read_file(directory_name: str, file_name: str) -> list[str]:
-    with open(PATH + directory_name + file_name) as file:
-        return file.read().split('\n')
+    with open(PATH + directory_name + file_name, 'r') as file:
+        data = file.read().split('\n')
+
+    return data
 
 def write_file(directory_name: str, file_name: str, data: list[str]):
-    with open(PATH + directory_name + file_name) as file:
-        file.writelines(data)
+    with open(PATH + directory_name + file_name, 'w') as file:
+        file.write('\n'.join(data))
 
 
 def absolute_path_converter(input_path: str, location: str) -> str:

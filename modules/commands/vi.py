@@ -53,7 +53,8 @@ def run(args: list[str], sudo: bool):
   characters = sum(len(line) for line in data)
   system.out([f"\"{file_name}\" {len(data)} lines, {characters} characters"])
 
-  command_mode = True
+  mode = 'normal'
+  command = ''
 
   position = [0, 0]
   system.position(position)
@@ -62,7 +63,7 @@ def run(args: list[str], sudo: bool):
   while True:
     key = system.get()
 
-    if not command_mode:
+    if mode == 'insert':
       if len(key) == 1:
         if len(data[position[1]]) + 1 > (TERMINAL_COLUMNS - 1):
           set_status('error: x boundary reached', position)
@@ -182,18 +183,45 @@ def run(args: list[str], sudo: bool):
 
       elif key == 'esc':
         set_status('', position)
-        command_mode = True
+        mode = 'normal'
+
+    elif mode == 'normal':
+      if key == ':':
+        set_status('', [0, TERMINAL_LINES - 2])
+        system.out([':'], end_newline=False, instant=True)
+        mode = 'command'
+        command = ''
+
+      elif key == 'a':
+        set_status(' -- insert -- ', position)
+        mode = 'insert'
+
+    elif mode == 'command':
+      if len(key) == 1:
+        if len(data[position[1]]) + 1 > (TERMINAL_COLUMNS - 1): continue
+        system.out([key], end_newline=False, instant=True)
+        command += key
+
+      elif key == 'enter':
+        if command == 'w':
+          file_manager.write_file(file_path, file_name, data)
+          characters = sum(len(line) for line in data)
+          set_status(f"\"{file_name}\" {len(data)} lines, {characters} characters written", position)
+          mode = 'normal'
+        elif command == 'q':
+          os.system('cls')
+          break
+        else:
+          set_status(f"&4error: not an editor command: {command}&f", position, colors=True)
+          mode = 'normal'
+
+      elif key == 'esc':
+        set_status('', position)
+        mode = 'normal'
 
 
-    elif key == ':':
-      pass
-    
-    elif key == 'a':
-      set_status(' -- insert -- ', position)
-      command_mode = False
 
-
-def set_status(status: str, position: list[int]):
+def set_status(status: str, position: list[int], colors: bool = False):
   system.position([0, TERMINAL_LINES - 2])
-  system.out([status + (' ' * (TERMINAL_COLUMNS - (len(status) + 1)))], instant=True)
-  system.position(position)   
+  system.out([status + (' ' * (TERMINAL_COLUMNS - (len(status) + 1)))], instant=True, colors=colors)
+  system.position(position)
