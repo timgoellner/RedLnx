@@ -1,3 +1,23 @@
 {
-    "/": {}
+    "/": {
+        "home": {
+            "type": 1,
+            "author": "tim",
+            "creation_date": "Sep 15 2023"
+        }
+    },
+    "/home/": {
+        "tim": {
+            "type": 1,
+            "author": "tim",
+            "creation_date": "Dec 02 2023"
+        }
+    },
+    "/home/tim/": {
+        "test.txt": {
+            "type": 2,
+            "author": "tim",
+            "creation_date": "Nov 02 2024"
+        }
+    }
 }

@@ -32,4 +32,3 @@ def run(args: list[str], sudo: bool):
     elif "-r" in args: system.out([f"userdel: {del_user_name} home directory (/home/{del_user_name}) not found"])
 
     data_handling.set_data(system_data, 1)
-

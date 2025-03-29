@@ -6,7 +6,7 @@ def redlnx_runtime():
     global user_name, path
     command = [""]
 
-    while not command[0] == "exit":
+    while not (command[0] == "exit" or (len(command) > 1 and command[1] == "exit")):
         system_data = data_handling.get_data(1)
         user_name = system_data["curr_user"]
         if system_data["users"][user_name]["home_folder"]: path = (system_data["path"]).replace(f"/home/{user_name}", "~")
@@ -17,7 +17,7 @@ def redlnx_runtime():
         else: input_char = '$'
 
         command = system.out([f"&a{user_name}@{socket.gethostname()}&f:&9{path}&f{input_char} "], input_mode=True, colors=True).split(' ')
-        if command[0].lower() == "sudo" and command[1].lower() not in ["", "exit"]: command_manager.parse_cmd(command[1].lower(), command[2:], True)
+        if command[0].lower() == "sudo" and len(command) > 1 and command[1].lower() not in ["", "exit"]: command_manager.parse_cmd(command[1].lower(), command[2:], True)
         elif command[0].lower() not in ["", "exit", "sudo"]: command_manager.parse_cmd(command[0].lower(), command[1:], False)
 
     shutdown()

@@ -5,11 +5,13 @@ PATH = os.path.join(os.path.dirname(__file__), '../data/')
 
 def get_data(config_id: int) -> dict:
     if config_id not in [1, 2, 3]: return {}
+
     if config_id == 1:
         with open(f"{PATH}system_data.json", "r") as data_file: return json.load(data_file)
-    if config_id == 2:
+    elif config_id == 2:
         with open(f"{PATH}file_system.json", "r") as data_file: return json.load(data_file)
-    with open(f"{PATH}command_data.json", "r") as data_file: return json.load(data_file)
+    elif config_id == 3:
+        with open(f"{PATH}command_data.json", "r") as data_file: return json.load(data_file)
 
 
 def set_data(data: dict, config_id: int):

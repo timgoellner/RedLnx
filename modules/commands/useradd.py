@@ -44,4 +44,3 @@ def run(args: list[str], sudo: bool):
         data_handling.set_data(system_data, 1)
 
     data_handling.set_data(system_data, 1)
-

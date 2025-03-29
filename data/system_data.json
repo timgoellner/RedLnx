@@ -1,6 +1,13 @@
 {
     "version": "1.0",
-    "path": "",
-    "users": {},
-    "curr_user": ""
+    "path": "/home/tim/",
+    "users": {
+        "tim": {
+            "passwd": "",
+            "home_folder": true,
+            "sudo": true,
+            "sudo_session": false
+        }
+    },
+    "curr_user": "tim"
 }

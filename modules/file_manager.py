@@ -43,6 +43,17 @@ def remove_file(directory_name: str, file_name: str):
     os.remove(PATH + directory_name + file_name)
 
 
+def read_file(directory_name: str, file_name: str) -> list[str]:
+    with open(PATH + directory_name + file_name, 'r') as file:
+        data = file.read().split('\n')
+
+    return data
+
+def write_file(directory_name: str, file_name: str, data: list[str]):
+    with open(PATH + directory_name + file_name, 'w') as file:
+        file.write('\n'.join(data))
+
+
 def absolute_path_converter(input_path: str, location: str) -> str:
     system_data = data_handling.get_data(1)
 
