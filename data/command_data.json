@@ -78,5 +78,10 @@
     "usage": "vi [file]",
     "options": [],
     "max_args": 1
+  },
+  "cat": {
+    "usage": "cat [file]",
+    "options": [],
+    "max_args": 1
   }
 }
