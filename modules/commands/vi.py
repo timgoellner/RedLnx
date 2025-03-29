@@ -211,6 +211,12 @@ def run(args: list[str], sudo: bool):
         elif command == 'q':
           os.system('cls')
           break
+        elif command == 'wq':
+          file_manager.write_file(file_path, file_name, data)
+          characters = sum(len(line) for line in data)
+          set_status(f"\"{file_name}\" {len(data)} lines, {characters} characters written", position)
+          os.system('cls')
+          break
         else:
           set_status(f"&4error: not an editor command: {command}&f", position, colors=True)
           mode = 'normal'
