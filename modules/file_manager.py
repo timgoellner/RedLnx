@@ -69,3 +69,6 @@ def absolute_path_converter(input_path: str, location: str) -> str:
         else: curr_location += path_snippet + '/'
 
     return curr_location
+
+def setup_filesystem():
+    os.mkdir(PATH)

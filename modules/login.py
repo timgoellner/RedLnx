@@ -44,7 +44,9 @@ def start_login() -> str:
 
 def start_setup() -> str:
     system_data = data_handling.get_data(1)
+
     system.out(["Welcome to RedLnx " + system_data["version"] + " oriented at (GNU/Linux => x86_64)"] + MOTD)
+
     while True:
         new_user_name = system.out(["[&e/&f] New RedLnx username: "], input_mode=True, colors=True).lower()
 
@@ -57,6 +59,7 @@ def start_setup() -> str:
                 system.out([f"-bash: forbidden character in username: {denied_char}"])
                 break
         else: break
+
     system.out(["[&e/&f] New RedLnx password: "], end_newline=False, colors=True)
     new_passwd = get_pass()
 
@@ -64,6 +67,7 @@ def start_setup() -> str:
     system_data["curr_user"] = new_user_name
     data_handling.set_data(system_data, 1)
 
+    file_manager.setup_filesystem()
     file_manager.create_directory("/", "home")
     file_manager.create_directory("/home/", new_user_name)
 
