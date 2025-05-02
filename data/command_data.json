@@ -5,8 +5,8 @@
     "max_args": 0
   },
   "ls": {
-    "usage": "ls [-la] [directory]",
-    "options": ["-la"],
+    "usage": "ls [-l] [directory]",
+    "options": ["-l"],
     "max_args": 1
   },
   "cd": {
@@ -35,8 +35,8 @@
     "max_args": -1
   },
   "rmdir": {
-    "usage": "rmdir [-rf] [directories ...]",
-    "options": ["-rf"],
+    "usage": "rmdir [-r] [directories ...]",
+    "options": ["-r"],
     "max_args": -1
   },
   "touch": {

@@ -20,8 +20,8 @@ def run(args: list[str], sudo: bool):
         else:
             file_path = data_handling.get_data(1)["path"]
 
-        if file_path not in file_system:
-            system.out([f"rm: cannot remove '{remove_file_path}': No such directory"])
+        if file_path in file_system:
+            system.out([f"rm: cannot remove '{remove_file_path}': Is a directory"])
             return
         elif file_name not in file_system[file_path]:
             system.out([f"rm: cannot remove '{remove_file_path}': No such file"])

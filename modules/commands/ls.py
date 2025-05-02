@@ -13,7 +13,7 @@ def run(args: list[str], sudo: bool):
         return
 
     ls_out = []
-    if "-la" not in args: ls_out.append("")
+    if "-l" not in args: ls_out.append("")
 
     for element in file_system[directory_path]:
         if file_system[directory_path][element]["type"] == 1:
@@ -21,7 +21,7 @@ def run(args: list[str], sudo: bool):
         else:
             element_name = element
 
-        if "-la" in args:
+        if "-l" in args:
             ls_out.append(file_system[directory_path][element]["author"] + "  " + file_system[directory_path][element][
                 "creation_date"] + "  " + element_name)
         elif not element.startswith('.'):

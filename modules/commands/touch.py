@@ -16,8 +16,7 @@ def run(args: list[str], sudo: bool):
 
         file_name = new_file_path_splits[-1]
         if len(new_file_path_splits) > 1:
-            file_path = file_manager.absolute_path_converter('/'.join(new_file_path_splits[:-1]) + '/',
-                                                             data_handling.get_data(1)["path"])
+            file_path = file_manager.absolute_path_converter('/'.join(new_file_path_splits[:-1]) + '/', data_handling.get_data(1)["path"])
         else:
             file_path = data_handling.get_data(1)["path"]
 

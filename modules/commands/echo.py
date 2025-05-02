@@ -5,8 +5,7 @@ def run(args: list[str], sudo: bool):
     if '-n' in args: out_list = args[1:]
     else: out_list = args
 
-    echo_out = ""
-    for out_snippet in out_list: echo_out += out_snippet + " "
+    out_list = " ".join(out_list)
 
-    if '-n' in args: system.out([echo_out[:-1]], end_newline=False)
-    else: system.out([echo_out[:-1]])
+    if '-n' in args: system.out([out_list], end_newline=False)
+    else: system.out([out_list])

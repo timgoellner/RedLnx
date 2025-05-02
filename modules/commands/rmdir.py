@@ -9,8 +9,8 @@ def run(args: list[str], sudo: bool):
         system.out(["rmdir: missing operand"])
         return
 
-    if "-rf" in args:
-        args.remove("-rf")
+    if "-r" in args:
+        args.remove("-r")
         child_remove = True
     else:
         child_remove = False
@@ -35,7 +35,7 @@ def run(args: list[str], sudo: bool):
             if not child_remove: system.out([f"rmdir: failed to remove '{directory_relative_path}': Directory not empty"])
             else:
                 for child_content_name in file_system[full_directory_path]:
-                    if file_system[full_directory_path][child_content_name]["type"] == 1: run(["-rf", full_directory_path + child_content_name + '/'], sudo)
+                    if file_system[full_directory_path][child_content_name]["type"] == 1: run(["-r", full_directory_path + child_content_name + '/'], sudo)
                     elif file_system[full_directory_path][child_content_name]["type"] == 2: rm.run([full_directory_path + child_content_name], sudo)
                 file_manager.remove_directory(directory_path, directory_name)
             return
